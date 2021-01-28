@@ -62,7 +62,7 @@ router.get('/jobs-by-location', (req, res) => {
       })
   });
 
-  //get jobs by job title
+  //get jobs by job title ****need fix
   router.get('/jobs-by-job-title', (req, res) => {
     const jobTitle = req.query.title.toLowerCase()
     req.query.isSort?
@@ -145,6 +145,21 @@ router.delete('/delete-job/:id', (req, res) => {
         res.status(500).json({ error: error });
       });
   });
+
+  //doesn't included in project
+// router.delete('/delete-all', (req, res) => {
+//     Jobs.Job.remove()
+//       // Return all 
+//       .then((Job) => {
+//         res.status(200).json({ deletedJob :Job });
+//       })
+//       // Catch any errors that might occur
+//       .catch((error) => {
+//         res.status(500).json({ error: error });
+//       });
+//   });
+
+
 
 // Export the Router so we can use it in the server.js file
 module.exports = router;

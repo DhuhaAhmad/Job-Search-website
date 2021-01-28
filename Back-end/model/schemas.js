@@ -1,7 +1,7 @@
 // Require necessary NPM packages
 const mongoose = require('mongoose'), Schema = mongoose.Schema;
-require('mongoose-type-email');
-mongoose.SchemaTypes.Email.defaults.message = 'Email address is invalid';
+// require('mongoose-type-email');
+// mongoose.SchemaTypes.Email.defaults.message = 'Email address is invalid';
 
 // Define  Schema
 
@@ -9,8 +9,11 @@ const jobSchema = new mongoose.Schema(
 	{
 
 		title: { type: String, required: true , lowercase:true },
-		Description: { type: String, required: true },
+		Description: { type: Array, required: true },
+		skills: {type: Array},
+		summary:{type:String},
 		date: { type: Date, default: Date.now },
+		EmploymentType:{type:String},
 		location: String,
 		company: {type: String, required: true },
 		Department: { type: String, required: true },
@@ -26,7 +29,7 @@ const UserSchema = new mongoose.Schema(
 		name: { type: String, required: true },
 		type: { type: String, required: true },
 		resume: { type: mongoose.Schema.Types.Mixed},
-		email: { type: mongoose.SchemaTypes.Email, required: true, index: { unique: true } },
+		email: { type:String, required:true },
 		passowrd: { type: String, required: true },
 		jobs: [{type: Schema.Types.ObjectId, ref: 'Job'}]
 	},
@@ -39,11 +42,11 @@ const UserSchema = new mongoose.Schema(
 const CompanySchema = new mongoose.Schema(
 	{
 		name: { type: String, required: true },
-		///Logo pic
-		email: { type: mongoose.SchemaTypes.Email, required: true },
+		email: { type:String , required: true },
 		location: { type: String, required: true },
+		logo: {type:String},
 		users: [UserSchema] ,
-		jobs: { type: String, required: true },
+		// jobs: { type: String, required: true },
 	},
 	{
 		timestamps: true,
