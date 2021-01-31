@@ -40,6 +40,19 @@ router.get('/jobs', (req, res) => {
       });
   });
 
+  // get company logo for one job
+  router.get('/company-logo', (req, res) => {
+    Company.find({name:req.query.company })
+      // Return all 
+      .then((company) => {
+        res.status(200).json({logo :company });
+      })
+    // Catch any errors that might occur
+          .catch((error) => {
+            res.status(500).json({ error: error });
+          });
+      });
+
   //get jobs by location
 router.get('/jobs-by-location', (req, res) => {
   req.query.isSort?
@@ -160,28 +173,6 @@ router.delete('/delete-job/:id', (req, res) => {
 //       });
 //   });
 
-
-  // router.get('/company-logo', (req, res) => {
-  //   Job.find({})
-  //   .then((all)=>{
-  //     all.forEach(job => {
-  //     Company.find({}).where('name').eq(job.company)
-  //     // Return all 
-  //     .then((company) => {
-  //       res.status(200).json({ job :job,logo :company });
-  //     })
-  //     // Catch any errors that might occur
-  //     .catch((error) => {
-  //       res.status(500).json({ error: error });
-  //     });
-  //     });
-  //   })
-  //   // Catch any errors that might occur
-  //         .catch((error) => {
-  //           res.status(500).json({ error: error });
-  //         });
-      
-  //     });
 
 // Export the Router so we can use it in the server.js file
 module.exports = router;
