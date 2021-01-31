@@ -7,6 +7,7 @@ const cors = require('cors');
 // Require Route Files
 const jobs = require('./route/jobs');
 const users = require('./route/users');
+const companies = require('./route/companies');
 
 // Require DB Configuration File
 const db_url = require('./db');
@@ -48,6 +49,7 @@ app.use(
 
 app.use(jobs);
 app.use(users);
+app.use(companies);
 
 /*** Routes ***/
 // Define PORT for the API to run on

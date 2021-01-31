@@ -1,14 +1,10 @@
 // Require necessary NPM packages
 const mongoose = require('mongoose'), Schema = mongoose.Schema;
-// require('mongoose-type-email');
-// mongoose.SchemaTypes.Email.defaults.message = 'Email address is invalid';
-
 // Define  Schema
 
 const jobSchema = new mongoose.Schema(
 	{
-
-		title: { type: String, required: true , lowercase:true },
+		title: { type: String, required: true},
 		Description: { type: Array, required: true },
 		skills: {type: Array},
 		summary:{type:String},
@@ -45,15 +41,12 @@ const CompanySchema = new mongoose.Schema(
 		email: { type:String , required: true },
 		location: { type: String, required: true },
 		logo: {type:String},
-		users: [UserSchema] ,
-		// jobs: { type: String, required: true },
+		jobs: [jobSchema],
 	},
 	{
 		timestamps: true,
 	}
 );
-
-
 
 // Compile our Model based on the Schema
 const Job = mongoose.model('Job', jobSchema);

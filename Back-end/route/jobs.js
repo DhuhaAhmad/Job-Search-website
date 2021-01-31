@@ -1,13 +1,13 @@
 // Require necessary NPM packages
 const express = require('express');
-const Jobs = require('../model/schemas')
+const {Job, Company, User} = require('../model/schemas')
 const JobDatabase = require('../model/JobDatabase')
 
 // Instantiate a Router (mini app that only handles routes)
 const router = express.Router();
 
 //insert to database
-// Jobs.Job.insertMany(JobDatabase, (err, jobs) => {
+// Job.insertMany(JobDatabase, (err, jobs) => {
 //       if (err) {
 //         console.log(err);
 //       }
@@ -20,7 +20,7 @@ const router = express.Router();
 router.get('/jobs', (req, res) => {
   //if isSort true return all jobs sorted by date
   req.query.isSort?
-    Jobs.Job.find({}).sort({date: 'descending'})
+    Job.find({}).sort({date: 'descending'})
     // Return all
     .then((allJobs) => {
       res.status(200).json({ jobs: allJobs });
@@ -29,7 +29,7 @@ router.get('/jobs', (req, res) => {
     .catch((error) => {
       res.status(500).json({ error: error });
     })
-    : Jobs.Job.find({})
+    : Job.find({})
       // Return all
       .then((allJobs) => {
         res.status(200).json({ jobs: allJobs });
@@ -43,7 +43,7 @@ router.get('/jobs', (req, res) => {
   //get jobs by location
 router.get('/jobs-by-location', (req, res) => {
   req.query.isSort?
-    Jobs.Job.find({location: req.query.location}).sort({date: 'descending'})
+    Job.find({location: req.query.location}).sort({date: 'descending'})
       // Return all 
       .then((allJobs) => {
         res.status(200).json({ jobs: allJobs });
@@ -51,7 +51,7 @@ router.get('/jobs-by-location', (req, res) => {
       // Catch any errors that might occur
       .catch((error) => {
         res.status(500).json({ error: error });
-      }) : Jobs.Job.find({location: req.query.location})
+      }) : Job.find({location: req.query.location})
       // Return all 
       .then((allJobs) => {
         res.status(200).json({ jobs: allJobs });
@@ -64,9 +64,9 @@ router.get('/jobs-by-location', (req, res) => {
 
   //get jobs by job title ****need fix
   router.get('/jobs-by-job-title', (req, res) => {
-    const jobTitle = req.query.title.toLowerCase()
+    const jobTitle = req.query.title
     req.query.isSort?
-    Jobs.Job.find({title: jobTitle}).sort({date: 'descending'})
+    Job.find({title: new RegExp(jobTitle,'i')}).sort({date: 'descending'})
       // Return all 
       .then((allJobs) => {
         res.status(200).json({ jobs: allJobs });
@@ -74,7 +74,7 @@ router.get('/jobs-by-location', (req, res) => {
       // Catch any errors that might occur
       .catch((error) => {
         res.status(500).json({ error: error });
-      }) : Jobs.Job.find({title: jobTitle})
+      }) : Job.find({title: new RegExp(jobTitle, 'i')})
       // Return all 
       .then((allJobs) => {
         res.status(200).json({ jobs: allJobs });
@@ -87,8 +87,9 @@ router.get('/jobs-by-location', (req, res) => {
 
   //get all jobs for specific company
 router.get('/jobs-by-company', (req, res) => {
+  const comapyName = req.query.company
   req.query.isSort?
-    Jobs.Job.find({company: req.query.company}).sort({date: 'descending'})
+    Job.find({company: new RegExp(comapyName,'i')}).sort({date: 'descending'})
       // Return all 
       .then((allJobs) => {
         res.status(200).json({ jobs: allJobs });
@@ -96,7 +97,7 @@ router.get('/jobs-by-company', (req, res) => {
       // Catch any errors that might occur
       .catch((error) => {
         res.status(500).json({ error: error });
-      }) : Jobs.Job.find({company: req.query.company})
+      }) : Job.find({company:  new RegExp(comapyName,'i')})
       // Return all 
       .then((allJobs) => {
         res.status(200).json({ jobs: allJobs });
@@ -109,7 +110,7 @@ router.get('/jobs-by-company', (req, res) => {
 
   //Add new job
 router.post('/add-job', (req, res) => {
-    Jobs.Job.create(req.body)
+    Job.create(req.body)
       // Return all 
       .then((newJob) => {
         res.status(200).json({ theNewJob :newJob });
@@ -123,7 +124,7 @@ router.post('/add-job', (req, res) => {
 
   //Update job by id
 router.put('/update-job/:id', (req, res) => {
-    Jobs.Job.findByIdAndUpdate(req.params.id,req.body)
+    Job.findByIdAndUpdate(req.params.id,req.body)
       // Return all
       .then((Job) => {
         res.status(200).json({ updatedJob :Job });
@@ -135,7 +136,7 @@ router.put('/update-job/:id', (req, res) => {
   });
 //delete job by Id
 router.delete('/delete-job/:id', (req, res) => {
-    Jobs.Job.findByIdAndDelete(req.params.id)
+    Job.findByIdAndDelete(req.params.id)
       // Return all 
       .then((Job) => {
         res.status(200).json({ deletedJob :Job });
@@ -146,9 +147,9 @@ router.delete('/delete-job/:id', (req, res) => {
       });
   });
 
-  //doesn't included in project
-// router.delete('/delete-all', (req, res) => {
-//     Jobs.Job.remove()
+  //doesn't include in project
+// router.delete('/delete-all-jobs', (req, res) => {
+//     Job.remove()
 //       // Return all 
 //       .then((Job) => {
 //         res.status(200).json({ deletedJob :Job });
@@ -160,6 +161,27 @@ router.delete('/delete-job/:id', (req, res) => {
 //   });
 
 
+  // router.get('/company-logo', (req, res) => {
+  //   Job.find({})
+  //   .then((all)=>{
+  //     all.forEach(job => {
+  //     Company.find({}).where('name').eq(job.company)
+  //     // Return all 
+  //     .then((company) => {
+  //       res.status(200).json({ job :job,logo :company });
+  //     })
+  //     // Catch any errors that might occur
+  //     .catch((error) => {
+  //       res.status(500).json({ error: error });
+  //     });
+  //     });
+  //   })
+  //   // Catch any errors that might occur
+  //         .catch((error) => {
+  //           res.status(500).json({ error: error });
+  //         });
+      
+  //     });
 
 // Export the Router so we can use it in the server.js file
 module.exports = router;
