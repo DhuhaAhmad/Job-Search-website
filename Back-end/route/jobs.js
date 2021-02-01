@@ -1,6 +1,6 @@
 // Require necessary NPM packages
 const express = require('express');
-const {Job, Company, User} = require('../model/schemas')
+const {Job, Company} = require('../model/schemas')
 const JobDatabase = require('../model/JobDatabase')
 
 // Instantiate a Router (mini app that only handles routes)
@@ -75,7 +75,7 @@ router.get('/jobs-by-location', (req, res) => {
       })
   });
 
-  //get jobs by job title ****need fix
+  //get jobs by job title
   router.get('/jobs-by-job-title', (req, res) => {
     const jobTitle = req.query.title
     req.query.isSort?
@@ -123,17 +123,24 @@ router.get('/jobs-by-company', (req, res) => {
 
   //Add new job
 router.post('/add-job', (req, res) => {
-    Job.create(req.body)
-      // Return all 
-      .then((newJob) => {
-        res.status(200).json({ theNewJob :newJob });
-      })
-      // Catch any errors that might occur
-      .catch((error) => {
-        res.status(500).json({ error: error });
-      });
-  });
 
+    Job.create(req.body)
+    // Return all 
+    .then((newJob) => {
+      Company.updateOne({name:req.body.company, $push: { jobs: newJob }})
+      .then((job)=>{
+        res.status(200).json('done');
+      })
+      .catch((error)=>{
+        res.status(500).json({ error: error });
+      })
+    })
+    // Catch any errors that might occur
+    .catch((error) => {
+      res.status(500).json({ error: error });
+    });
+  })
+   
 
   //Update job by id
 router.put('/update-job/:id', (req, res) => {
@@ -172,7 +179,6 @@ router.delete('/delete-job/:id', (req, res) => {
 //         res.status(500).json({ error: error });
 //       });
 //   });
-
 
 // Export the Router so we can use it in the server.js file
 module.exports = router;

@@ -6,7 +6,6 @@ const mongoose = require('mongoose');
 
 // Require Route Files
 const jobs = require('./route/jobs');
-const users = require('./route/users');
 const companies = require('./route/companies');
 
 // Require DB Configuration File
@@ -20,14 +19,6 @@ mongoose.connection.once('open', () => {
 
 // Instantiate Express Application Object
 const app = express();
-
-
-app.get('/', (req, res) => {
-  console.log('get /');
-  res.json('result');
-});
-
-
 
 /*** Middleware ***/
 
@@ -60,7 +51,6 @@ app.use(function (req, res, next) {
 // Mount imported Routers ok
 
 app.use(jobs);
-app.use(users);
 app.use(companies);
 
 /*** Routes ***/
