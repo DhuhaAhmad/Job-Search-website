@@ -55,8 +55,9 @@ router.get('/jobs', (req, res) => {
 
   //get jobs by location
 router.get('/jobs-by-location', (req, res) => {
+  const jobLocation = req.query.location
   req.query.isSort?
-    Job.find({location: req.query.location}).sort({date: 'descending'})
+    Job.find({location: new RegExp(jobLocation,'i')}).sort({date: 'descending'})
       // Return all 
       .then((allJobs) => {
         res.status(200).json({ jobs: allJobs });
@@ -64,7 +65,7 @@ router.get('/jobs-by-location', (req, res) => {
       // Catch any errors that might occur
       .catch((error) => {
         res.status(500).json({ error: error });
-      }) : Job.find({location: req.query.location})
+      }) : Job.find({location: new RegExp(jobLocation,'i')})
       // Return all 
       .then((allJobs) => {
         res.status(200).json({ jobs: allJobs });
@@ -120,14 +121,12 @@ router.get('/jobs-by-company', (req, res) => {
         res.status(500).json({ error: error });
       }) 
   });
-
   //Add new job
 router.post('/add-job', (req, res) => {
-
     Job.create(req.body)
     // Return all 
     .then((newJob) => {
-      Company.updateOne({name:req.body.company, $push: { jobs: newJob }})
+      Company.updateOne({name:req.body.company}, {$push: { jobs: newJob }})
       .then((job)=>{
         res.status(200).json('done');
       })

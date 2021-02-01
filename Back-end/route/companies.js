@@ -16,17 +16,17 @@ const router = express.Router();
 // })
 
  //get all 
-router.get('/companies', (req, res) => {
-    Company.find({})
-      // Return all
-      .then((allCompanies) => {
-        res.status(200).json({ companies: allCompanies });
-      })
-      // Catch any errors that might occur
-      .catch((error) => {
-        res.status(500).json({ error: error });
-      });
-  });
+// router.get('/companies', (req, res) => {
+//     Company.find({})
+//       // Return all
+//       .then((allCompanies) => {
+//         res.status(200).json({ companies: allCompanies });
+//       })
+//       // Catch any errors that might occur
+//       .catch((error) => {
+//         res.status(500).json({ error: error });
+//       });
+//   });
   
 router.put('/companies-jobs', (req, res) => {
     Company.updateOne({name:req.query.company}, {$push: { jobs: req.body}})

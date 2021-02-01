@@ -21,19 +21,19 @@ const jobSchema = new mongoose.Schema(
 );
  
 //==============Deleted==============
-// const UserSchema = new mongoose.Schema(
-// 	{
-// 		name: { type: String, required: true },
-// 		type: { type: String, required: true },
-// 		resume: { type: mongoose.Schema.Types.Mixed},
-// 		email: { type:String, required:true },
-// 		passowrd: { type: String, required: true },
-// 		jobs: [{type: Schema.Types.ObjectId, ref: 'Job'}]
-// 	},
-// 	{
-// 		timestamps: true,
-// 	}
-// );
+const UserSchema = new mongoose.Schema(
+	{
+		name: { type: String, required: true },
+		type: { type: String, required: true },
+		// resume: { type: mongoose.Schema.Types.Mixed},
+		email: { type:String, required:true },
+		password: { type: String, required: true },
+		// jobs: [{type: Schema.Types.ObjectId, ref: 'Job'}]
+	},
+	{
+		timestamps: true,
+	}
+);
 
 
 const CompanySchema = new mongoose.Schema(
@@ -52,7 +52,7 @@ const CompanySchema = new mongoose.Schema(
 // Compile our Model based on the Schema
 const Job = mongoose.model('Job', jobSchema);
 const Company = mongoose.model('Company', CompanySchema);
-// const User = mongoose.model('User', UserSchema);
+const User = mongoose.model('User', UserSchema);
 
 // Export our Model for use
-module.exports = {Job, Company};
+module.exports = {Job, Company,User};
